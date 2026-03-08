@@ -1,0 +1,252 @@
+.college-page {
+  min-height: 100vh;
+  background: #f0f4f8;
+  padding: 40px 20px;
+}
+
+.college-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.college-header h1 {
+  font-size: 36px;
+  color: #0D4F5C;
+}
+
+.college-header p {
+  color: #666;
+  margin-top: 8px;
+}
+
+.filters {
+  display: flex;
+  gap: 15px;
+  max-width: 1000px;
+  margin: 0 auto 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-wrapper {
+  display: flex;
+  flex: 1;
+  min-width: 250px;
+  gap: 8px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 12px 20px;
+  border: 2px solid #e0eef0;
+  border-radius: 25px;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-input:focus { border-color: #0D4F5C; }
+
+.search-btn {
+  padding: 12px 20px;
+  background: #0D4F5C;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.search-btn:hover { background: #E8A624; color: #0D4F5C; }
+
+.filter-select {
+  padding: 12px 20px;
+  border: 2px solid #e0eef0;
+  border-radius: 25px;
+  font-size: 14px;
+  outline: none;
+  background: white;
+  cursor: pointer;
+}
+
+.results-count {
+  text-align: center;
+  color: #666;
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+.error-box {
+  background: #ffe8e8;
+  color: #c0392b;
+  padding: 15px 25px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 20px;
+}
+
+.loading-box {
+  text-align: center;
+  padding: 60px;
+  color: #666;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #e0eef0;
+  border-top: 4px solid #0D4F5C;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 15px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.colleges-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.college-card {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.college-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(13,79,92,0.15);
+}
+
+.college-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.college-card-header h3 {
+  font-size: 15px;
+  color: #0D4F5C;
+  flex: 1;
+  margin-right: 10px;
+  line-height: 1.4;
+}
+
+.rating {
+  background: #fff8e8;
+  color: #E8A624;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.college-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.tag {
+  background: #f0f4f8;
+  color: #555;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+}
+
+.tag.gov {
+  background: #e8f4f6;
+  color: #0D4F5C;
+}
+
+.college-fee {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  background: #f8fbfc;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #555;
+}
+
+.college-fee strong {
+  color: #0D4F5C;
+  font-size: 14px;
+}
+
+.btn-apply {
+  width: 100%;
+  background: #0D4F5C;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+
+.btn-apply:hover {
+  background: #E8A624;
+  color: #0D4F5C;
+}
+
+.no-results {
+  text-align: center;
+  padding: 60px;
+  color: #666;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+  padding-bottom: 40px;
+}
+
+.page-btn {
+  padding: 8px 16px;
+  border: 2px solid #e0eef0;
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  color: #0D4F5C;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: #0D4F5C;
+  background: #e8f4f6;
+}
+
+.page-btn.active {
+  background: #0D4F5C;
+  color: white;
+  border-color: #0D4F5C;
+}
+
+.page-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}

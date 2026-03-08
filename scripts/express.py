@@ -4,7 +4,6 @@ import warnings
 warnings.filterwarnings("ignore")
 
 base_folder = r"C:\Users\prana\OneDrive\Documents\Desktop\Educompass_data"
-# ⚠️ Change "YourName" to your actual Windows username
 
 print("=" * 60)
 print("EXPLORING ALL YOUR FILES")

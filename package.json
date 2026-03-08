@@ -1,0 +1,27 @@
+{
+  "name": "edi-sem4-g5",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pranav15515/EDI-SEM4-G5.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Pranav15515/EDI-SEM4-G5/issues"
+  },
+  "homepage": "https://github.com/Pranav15515/EDI-SEM4-G5#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mysql2": "^3.19.0"
+  }
+}
