@@ -16,6 +16,7 @@ function Home() {
         <div className="nav-links">
           <a href="/colleges">College Finder</a>
           <a href="/scholarships">Scholarships</a>
+          <a href="/predictor">College Predictor</a>
           <button onClick={() => navigate('/quiz')}>
             Take Quiz
           </button>
@@ -74,42 +75,49 @@ function Home() {
             <div className="feature-icon">🎯</div>
             <h3>Aptitude Quiz</h3>
             <p>20 questions to discover your
-               strengths and ideal career path</p>
+              strengths and ideal career path</p>
           </div>
 
           <div className="feature-card">
             <div className="feature-icon">🗺️</div>
             <h3>Career Pathways</h3>
             <p>Visual map from your stream
-               to real world jobs and salaries</p>
+              to real world jobs and salaries</p>
           </div>
 
           <div className="feature-card">
             <div className="feature-icon">🏛️</div>
             <h3>College Finder</h3>
             <p>Search 8000+ government colleges
-               by state, stream and fees</p>
+              by state, stream and fees</p>
           </div>
 
           <div className="feature-card">
             <div className="feature-icon">💰</div>
             <h3>Scholarships</h3>
             <p>Find scholarships you qualify for
-               based on your profile</p>
+              based on your profile</p>
           </div>
 
           <div className="feature-card">
             <div className="feature-icon">📊</div>
             <h3>Salary Insights</h3>
             <p>Know what you can earn before
-               choosing your career path</p>
+              choosing your career path</p>
           </div>
 
           <div className="feature-card">
             <div className="feature-icon">🤖</div>
             <h3>AI Advisor</h3>
             <p>Chat with our AI for personalized
-               academic guidance anytime</p>
+              academic guidance anytime</p>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-icon">🎯</div>
+            <h3>College Predictor</h3>
+            <p>Enter your MHT-CET percentile and instantly
+              find Safe, Good and Reach colleges</p>
           </div>
 
         </div>
@@ -149,7 +157,7 @@ function Home() {
       <footer className="footer">
         <p>🧭 EduCompass — From School to Career</p>
         <p>Empowering Students · Strengthening
-           Government Institutions · Building Careers</p>
+          Government Institutions · Building Careers</p>
       </footer>
 
     </div>
@@ -157,3 +165,5 @@ function Home() {
 }
 
 export default Home;
+
+<a href="/predictor">College Predictor</a>

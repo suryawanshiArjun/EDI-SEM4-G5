@@ -5,6 +5,7 @@ import Quiz from './pages/Quiz';
 import Results from './pages/Results';
 import CollegeFinder from './pages/CollegeFinder';
 import Scholarships from './pages/Scholarships';
+import CollegePredictor from './pages/CollegePredictor';
 import './App.css';
 
 function App() {
@@ -12,11 +13,12 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/"            element={<Home />} />
-          <Route path="/quiz"        element={<Quiz />} />
-          <Route path="/results"     element={<Results />} />
-          <Route path="/colleges"    element={<CollegeFinder />} />
+          <Route path="/"             element={<Home />} />
+          <Route path="/quiz"         element={<Quiz />} />
+          <Route path="/results"      element={<Results />} />
+          <Route path="/colleges"     element={<CollegeFinder />} />
           <Route path="/scholarships" element={<Scholarships />} />
+          <Route path="/predictor"    element={<CollegePredictor />} />
         </Routes>
       </div>
     </Router>

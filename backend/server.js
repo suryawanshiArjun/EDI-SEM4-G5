@@ -5,6 +5,7 @@ require('dotenv').config();
 const collegesRoute     = require('./routes/colleges');
 const careersRoute      = require('./routes/careers');
 const scholarshipsRoute = require('./routes/scholarships');
+const predictorRoute    = require('./routes/predictor');
 
 const app  = express();
 const PORT = process.env.PORT || 5000;
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use('/api/colleges',     collegesRoute);
 app.use('/api/careers',      careersRoute);
 app.use('/api/scholarships', scholarshipsRoute);
+app.use('/api/predictor',    predictorRoute);
 
 // Test route
 app.get('/', (req, res) => {
@@ -25,7 +27,8 @@ app.get('/', (req, res) => {
     endpoints: [
       'GET /api/colleges',
       'GET /api/careers',
-      'GET /api/scholarships'
+      'GET /api/scholarships',
+      'GET /api/predictor'
     ]
   });
 });
