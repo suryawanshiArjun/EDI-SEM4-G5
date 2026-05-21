@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './Home.css';
 
 function Home() {
@@ -17,6 +17,9 @@ function Home() {
           <a href="/colleges">College Finder</a>
           <a href="/scholarships">Scholarships</a>
           <a href="/predictor">College Predictor</a>
+
+          <Link to="/pathways">After 10th Pathways</Link>
+
           <button onClick={() => navigate('/quiz')}>
             Take Quiz
           </button>

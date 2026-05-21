@@ -7,6 +7,7 @@ import CollegeFinder from './pages/CollegeFinder';
 import Scholarships from './pages/Scholarships';
 import CollegePredictor from './pages/CollegePredictor';
 import './App.css';
+import PathwaysAfter10th from './pages/PathwaysAfter10th';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/colleges"     element={<CollegeFinder />} />
           <Route path="/scholarships" element={<Scholarships />} />
           <Route path="/predictor"    element={<CollegePredictor />} />
+          <Route path="/pathways" element={<PathwaysAfter10th />} />
         </Routes>
       </div>
     </Router>
