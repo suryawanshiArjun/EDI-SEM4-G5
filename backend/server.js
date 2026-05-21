@@ -5,22 +5,21 @@ require('dotenv').config();
 const collegesRoute     = require('./routes/colleges');
 const careersRoute      = require('./routes/careers');
 const scholarshipsRoute = require('./routes/scholarships');
+const predictRoute      = require('./routes/predict');
 const predictorRoute    = require('./routes/predictor');
 
 const app  = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Routes
 app.use('/api/colleges',     collegesRoute);
 app.use('/api/careers',      careersRoute);
 app.use('/api/scholarships', scholarshipsRoute);
+app.use('/api/predict',      predictRoute);
 app.use('/api/predictor',    predictorRoute);
 
-// Test route
 app.get('/', (req, res) => {
   res.json({
     message: '🎉 EduCompass Backend Running!',
@@ -28,7 +27,8 @@ app.get('/', (req, res) => {
       'GET /api/colleges',
       'GET /api/careers',
       'GET /api/scholarships',
-      'GET /api/predictor'
+      'POST /api/predict',
+      'GET /api/predictor',
     ]
   });
 });

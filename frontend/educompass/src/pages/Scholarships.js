@@ -1,146 +1,361 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './Scholarships.css';
 
-const scholarshipsData = [
-  { name: "NSP - National Scholarship Portal", amount: "₹25,000/year", eligibility: "Class 10/12 pass, family income < 2.5L", gender: "All", category: "All", deadline: "Oct 31, 2025", ministry: "Ministry of Education" },
-  { name: "Pragati Scholarship (AICTE)", amount: "₹50,000/year", eligibility: "Girl students in technical education", gender: "Female", category: "All", deadline: "Nov 30, 2025", ministry: "AICTE" },
-  { name: "INSPIRE Scholarship", amount: "₹80,000/year", eligibility: "Top 1% in Class 12, pursuing B.Sc", gender: "All", category: "All", deadline: "Dec 15, 2025", ministry: "DST India" },
-  { name: "Dr. Ambedkar Scholarship", amount: "₹10,000/year", eligibility: "SC/ST students post-matric", gender: "All", category: "SC/ST", deadline: "Oct 15, 2025", ministry: "Ministry of Social Justice" },
-  { name: "Indira Gandhi Scholarship", amount: "₹36,200/year", eligibility: "Single girl child pursuing PG", gender: "Female", category: "All", deadline: "Dec 31, 2025", ministry: "UGC" },
-  { name: "National Overseas Scholarship", amount: "Full Funding", eligibility: "SC/ST students for foreign study", gender: "All", category: "SC/ST", deadline: "Mar 31, 2026", ministry: "Ministry of Social Justice" },
-  { name: "ONGC Scholarship", amount: "₹48,000/year", eligibility: "Merit based, engineering/medicine", gender: "All", category: "All", deadline: "Sep 30, 2025", ministry: "ONGC Foundation" },
-  { name: "Disability Scholarship (NDF)", amount: "₹20,000/year", eligibility: "Students with 40%+ disability", gender: "All", category: "Disabled", deadline: "Nov 15, 2025", ministry: "Dept of Empowerment" },
-  { name: "Begum Hazrat Mahal Scholarship", amount: "₹10,000/year", eligibility: "Minority girl students Class 9-12", gender: "Female", category: "Minority", deadline: "Oct 31, 2025", ministry: "Maulana Azad Foundation" },
-  { name: "Post Matric Scholarship OBC", amount: "₹15,000/year", eligibility: "OBC students, income < 1L", gender: "All", category: "OBC", deadline: "Nov 30, 2025", ministry: "Ministry of Social Justice" },
-  { name: "Merit cum Means Scholarship", amount: "₹30,000/year", eligibility: "Minority students pursuing professional courses", gender: "All", category: "Minority", deadline: "Dec 15, 2025", ministry: "Ministry of Minority Affairs" },
-  { name: "Ishan Uday Scholarship", amount: "₹54,000/year", eligibility: "Students from North East India", gender: "All", category: "All", deadline: "Nov 30, 2025", ministry: "UGC" },
+const STATES = [
+  'All', 'All India', 'Maharashtra', 'Delhi', 'Tamil Nadu',
+  'Karnataka', 'West Bengal', 'Uttar Pradesh', 'Rajasthan',
+  'Gujarat', 'Punjab', 'Haryana', 'Andhra Pradesh', 'Telangana',
+  'Kerala', 'Madhya Pradesh', 'Bihar', 'Odisha', 'Assam'
 ];
 
-const genders    = ["All", "Female", "Male"];
-const categories = ["All", "SC/ST", "OBC", "Minority", "Disabled", "General"];
-const ITEMS_PER_PAGE = 6;
+const COMMUNITIES = [
+  'All', 'General', 'OBC', 'SC', 'ST', 'Minority', 'EWS',
+  'VJNT', 'SBC', 'EBC', 'NT-B', 'NT-C', 'NT-D'
+];
+
+const GENDERS = ['All', 'Male', 'Female'];
 
 function Scholarships() {
-  const [gender,   setGender]   = useState("All");
-  const [category, setCategory] = useState("All");
-  const [search,   setSearch]   = useState("");
-  const [page,     setPage]     = useState(1);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const profession = location.state?.profession || '';
 
-  const filtered = scholarshipsData.filter(s => {
-    const matchGender   = gender   === "All" || s.gender   === "All" || s.gender   === gender;
-    const matchCategory = category === "All" || s.category === "All" || s.category === category;
-    const matchSearch   = s.name.toLowerCase().includes(search.toLowerCase());
-    return matchGender && matchCategory && matchSearch;
-  });
+  const [scholarships, setScholarships] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const paginated  = filtered.slice(
-    (page - 1) * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE
-  );
+  const [gender, setGender] = useState('All');
+  const [community, setCommunity] = useState('All');
+  const [state, setState] = useState('All');
+  const [searchInput, setSearchInput] = useState('');
+  const [search, setSearch] = useState('');
 
-  const handleFilter = (setter, value) => {
-    setter(value);
+  const fetchScholarships = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      let url = `http://localhost:5000/api/scholarships?page=${page}&limit=12`;
+
+      if (profession)
+        url += `&profession=${encodeURIComponent(profession)}`;
+
+      if (gender !== 'All')
+        url += `&gender=${encodeURIComponent(gender)}`;
+
+      if (community !== 'All')
+        url += `&community=${encodeURIComponent(community)}`;
+
+      if (state !== 'All')
+        url += `&state=${encodeURIComponent(state)}`;
+
+      if (search)
+        url += `&search=${encodeURIComponent(search)}`;
+
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (data.success) {
+        setScholarships(data.data);
+        setTotal(data.total);
+        setTotalPages(data.totalPages);
+      } else {
+        setError('Failed to load scholarships.');
+      }
+    } catch {
+      setError('Cannot connect to server. Make sure backend is running!');
+    }
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchScholarships();
+  }, [page, gender, community, state, search, profession]);
+
+  const handleSearch = () => {
+    setSearch(searchInput);
+    setPage(1);
+  };
+
+  const handleFilter = (setter, val) => {
+    setter(val);
     setPage(1);
   };
 
   return (
-    <div className="scholarship-page">
+    <div className="sch-page">
 
-      <div className="scholarship-header">
+      {/* HEADER */}
+      <div className="sch-header">
         <h1>💰 Scholarship Finder</h1>
-        <p>Find scholarships you are eligible for</p>
+
+        <p>
+          {profession ? (
+            <>
+              Showing scholarships for <strong>{profession}</strong> —{' '}
+              {total.toLocaleString()} found
+            </>
+          ) : (
+            <>
+              {total.toLocaleString()} scholarships from across India
+            </>
+          )}
+        </p>
       </div>
 
-      <div className="filters">
-        <input
-          type="text"
-          placeholder="🔍 Search scholarships..."
-          value={search}
-          onChange={e => handleFilter(setSearch, e.target.value)}
-          className="search-input"
-        />
-        <select value={gender}
-          onChange={e => handleFilter(setGender, e.target.value)}
-          className="filter-select">
-          {genders.map(g => (
+      {/* PROFESSION BANNER */}
+      {profession && (
+        <div className="profession-banner">
+          <span>
+            🎯 Filtered for: <strong>{profession}</strong>
+          </span>
+
+          <button
+            className="clear-btn"
+            onClick={() => navigate('/scholarships')}
+          >
+            Show All ✕
+          </button>
+        </div>
+      )}
+
+      {/* FILTERS */}
+      <div className="sch-filters">
+
+        <div className="search-wrap">
+          <input
+            className="sch-search"
+            type="text"
+            placeholder="🔍 Search by name or provider..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+          />
+
+          <button className="search-btn" onClick={handleSearch}>
+            Search
+          </button>
+        </div>
+
+        <select
+          className="sch-select"
+          value={gender}
+          onChange={(e) => handleFilter(setGender, e.target.value)}
+        >
+          {GENDERS.map((g) => (
             <option key={g} value={g}>
-              {g === "All" ? "All Genders" : g}
+              {g === 'All' ? 'All Genders' : g}
             </option>
           ))}
         </select>
-        <select value={category}
-          onChange={e => handleFilter(setCategory, e.target.value)}
-          className="filter-select">
-          {categories.map(c => (
+
+        <select
+          className="sch-select"
+          value={community}
+          onChange={(e) => handleFilter(setCommunity, e.target.value)}
+        >
+          {COMMUNITIES.map((c) => (
             <option key={c} value={c}>
-              {c === "All" ? "All Categories" : c}
+              {c === 'All' ? 'All Categories' : c}
+            </option>
+          ))}
+        </select>
+
+        <select
+          className="sch-select"
+          value={state}
+          onChange={(e) => handleFilter(setState, e.target.value)}
+        >
+          {STATES.map((s) => (
+            <option key={s} value={s}>
+              {s === 'All' ? 'All States' : s}
             </option>
           ))}
         </select>
       </div>
 
-      <div className="results-count">
-        {filtered.length} scholarships found
+      {/* COUNT */}
+      <div className="sch-count">
+        {loading
+          ? 'Loading...'
+          : `Showing ${scholarships.length} of ${total.toLocaleString()} — Page ${page} of ${totalPages}`}
       </div>
 
-      <div className="scholarships-list">
-        {paginated.map((s, index) => (
-          <div key={index} className="scholarship-card">
-            <div className="scholarship-left">
-              <div className="scholarship-icon">🎓</div>
-              <div className="scholarship-info">
-                <h3>{s.name}</h3>
-                <p className="ministry">By {s.ministry}</p>
-                <p className="eligibility">📋 {s.eligibility}</p>
-              </div>
-            </div>
-            <div className="scholarship-right">
-              <div className="amount">{s.amount}</div>
-              <div className="deadline">📅 Deadline: {s.deadline}</div>
-              <div className="tags">
-                <span className="stag">
-                  {s.gender === "All" ? "All Genders" : s.gender}
-                </span>
-                <span className="stag">
-                  {s.category === "All" ? "General" : s.category}
-                </span>
-              </div>
-              <button className="btn-apply">Apply Now →</button>
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* ERROR */}
+      {error && <div className="sch-error">⚠️ {error}</div>}
 
-      {filtered.length === 0 && (
-        <div className="no-results">
-          <p>😕 No scholarships found.</p>
-          <p>Try different filters!</p>
+      {/* LOADING */}
+      {loading && (
+        <div className="sch-loading">
+          <div className="spinner"></div>
+          <p>Loading scholarships...</p>
+        </div>
+      )}
+
+      {/* CARDS */}
+      {!loading && !error && (
+        <div className="sch-list">
+
+          {scholarships.map((s, i) => (
+            <div key={i} className="sch-card">
+
+              {/* LEFT */}
+              <div className="sch-left">
+
+                <div className="sch-icon">🎓</div>
+
+                <div className="sch-info">
+
+                  <h3>{s.scholarship_name}</h3>
+
+                  <p className="sch-provider">
+                    By {s.provider}
+                  </p>
+
+                  <div className="sch-tags">
+
+                    {s.field && s.field !== 'All' && (
+                      <span className="stag field-tag">
+                        📚 {s.field}
+                      </span>
+                    )}
+
+                    {s.gender && s.gender !== 'All' && (
+                      <span className="stag">
+                        👤 {s.gender}
+                      </span>
+                    )}
+
+                    {s.community && s.community !== 'All' && (
+                      <span className="stag">
+                        🏷️ {s.community}
+                      </span>
+                    )}
+
+                    {s.state && s.state !== 'All India' && (
+                      <span className="stag state-tag">
+                        📍 {s.state}
+                      </span>
+                    )}
+
+                  </div>
+
+                  <div className="sch-details">
+
+                    {s.qualification && (
+                      <span>🎓 {s.qualification}</span>
+                    )}
+
+                    {s.income && (
+                      <span>💵 Income: {s.income}</span>
+                    )}
+
+                    {s.percentage && (
+                      <span>📊 Marks: {s.percentage}%</span>
+                    )}
+
+                    {s.deadline && (
+                      <span>📅 Deadline: {s.deadline}</span>
+                    )}
+
+                  </div>
+                </div>
+              </div>
+
+              {/* RIGHT */}
+              <div className="sch-right">
+
+                <div className="sch-amount">
+                  {s.amount}
+                </div>
+
+                <a
+                  href={s.apply_link || 'https://scholarships.gov.in'}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-apply"
+                >
+                  Apply Now →
+                </a>
+
+              </div>
+            </div>
+          ))}
+
+        </div>
+      )}
+
+      {/* NO RESULTS */}
+      {!loading && !error && scholarships.length === 0 && (
+        <div className="sch-empty">
+          <p>😕 No scholarships found for your filters.</p>
+          <p>Try removing some filters!</p>
         </div>
       )}
 
       {/* PAGINATION */}
-      {totalPages > 1 && (
+      {!loading && totalPages > 1 && (
         <div className="pagination">
+
           <button
-            onClick={() => setPage(p => p - 1)}
+            className="page-btn"
+            onClick={() => setPage(1)}
             disabled={page === 1}
-            className="page-btn">
+          >
+            « First
+          </button>
+
+          <button
+            className="page-btn"
+            onClick={() => setPage((p) => p - 1)}
+            disabled={page === 1}
+          >
             ← Prev
           </button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button key={i}
-              onClick={() => setPage(i + 1)}
-              className={`page-btn ${page === i + 1 ? 'active' : ''}`}>
-              {i + 1}
-            </button>
-          ))}
+
+          {Array.from(
+            { length: Math.min(5, totalPages) },
+            (_, i) => {
+              let n;
+
+              if (totalPages <= 5) n = i + 1;
+              else if (page <= 3) n = i + 1;
+              else if (page >= totalPages - 2) n = totalPages - 4 + i;
+              else n = page - 2 + i;
+
+              return (
+                <button
+                  key={n}
+                  className={`page-btn ${page === n ? 'active' : ''}`}
+                  onClick={() => setPage(n)}
+                >
+                  {n}
+                </button>
+              );
+            }
+          )}
+
           <button
-            onClick={() => setPage(p => p + 1)}
+            className="page-btn"
+            onClick={() => setPage((p) => p + 1)}
             disabled={page === totalPages}
-            className="page-btn">
+          >
             Next →
           </button>
+
+          <button
+            className="page-btn"
+            onClick={() => setPage(totalPages)}
+            disabled={page === totalPages}
+          >
+            Last »
+          </button>
+
         </div>
       )}
 

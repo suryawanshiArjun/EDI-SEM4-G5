@@ -1,10 +1,30 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './CollegeFinder.css';
 
 const states  = ["All States", "Tamil Nadu", "Maharashtra", "Delhi", "Karnataka", "West Bengal", "Uttar Pradesh", "Rajasthan", "Gujarat", "Punjab", "Haryana"];
-const streams = ["All Streams", "Engineering", "Medical", "Arts/Commerce", "Science", "Management"];
+const streams = ["All Streams", "Engineering", "Medical", "Science", "Arts/Commerce", "Management"];
+
+const professionToStream = {
+  'Software Engineer':               'Engineering',
+  'Data Scientist':                  'Engineering',
+  'Civil / Mechanical Engineer':     'Engineering',
+  'Doctor / Healthcare':             'Medical',
+  'Scientist / Researcher':          'Science',
+  'Teacher / Educator':              'Arts/Commerce',
+  'Lawyer':                          'Arts/Commerce',
+  'Business Manager / Entrepreneur': 'Management',
+  'Financial Analyst / Accountant':  'Management',
+  'Psychologist / Counsellor':       'Medical',
+  'Artist / Content Creator':        'Arts/Commerce',
+  'Graphic / UX Designer':           'Engineering',
+};
 
 function CollegeFinder() {
+  const location   = useLocation();
+  const navigate   = useNavigate();
+  const profession = location.state?.profession || '';
+
   const [colleges,       setColleges]       = useState([]);
   const [total,          setTotal]          = useState(0);
   const [totalPages,     setTotalPages]     = useState(0);
@@ -20,10 +40,15 @@ function CollegeFinder() {
     setLoading(true);
     setError('');
     try {
+      // If profession given use its stream else use selected stream
+      const stream = profession
+        ? professionToStream[profession] || ''
+        : selectedStream !== 'All Streams' ? selectedStream : '';
+
       let url = `http://localhost:5000/api/colleges?page=${page}&limit=12`;
-      if (selectedState  !== 'All States')  url += `&state=${selectedState}`;
-      if (selectedStream !== 'All Streams') url += `&stream=${selectedStream}`;
-      if (search) url += `&search=${search}`;
+      if (stream)                          url += `&stream=${stream}`;
+      if (selectedState !== 'All States')  url += `&state=${selectedState}`;
+      if (search)                          url += `&search=${search}`;
 
       const response = await fetch(url);
       const data     = await response.json();
@@ -43,7 +68,7 @@ function CollegeFinder() {
 
   useEffect(() => {
     fetchColleges();
-  }, [page, selectedState, selectedStream, search]);
+  }, [page, selectedState, selectedStream, search, profession]);
 
   const handleSearch = () => {
     setSearch(searchInput);
@@ -64,49 +89,64 @@ function CollegeFinder() {
         <p>Search from <strong>{total.toLocaleString()}</strong> colleges across India</p>
       </div>
 
-      {/* FILTERS */}
-      <div className="filters">
-        <div className="search-wrapper">
-          <input
-            type="text"
-            placeholder="🔍 Search college name..."
-            value={searchInput}
-            onChange={e => setSearchInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleSearch()}
-            className="search-input"
-          />
-          <button onClick={handleSearch} className="search-btn">
-            Search
+      {/* PROFESSION BANNER */}
+      {profession && (
+        <div className="profession-banner">
+          <span>🎯 Showing colleges for: <strong>{profession}</strong></span>
+          <button
+            onClick={() => navigate('/colleges')}
+            className="clear-btn">
+            Show All Colleges ✕
           </button>
         </div>
-        <select
-          value={selectedState}
-          onChange={e => handleFilter(setSelectedState, e.target.value)}
-          className="filter-select">
-          {states.map(s => (
-            <option key={s} value={s}>{s}</option>
-          ))}
-        </select>
-        <select
-          value={selectedStream}
-          onChange={e => handleFilter(setSelectedStream, e.target.value)}
-          className="filter-select">
-          {streams.map(s => (
-            <option key={s} value={s}>{s}</option>
-          ))}
-        </select>
-      </div>
+      )}
+
+      {/* FILTERS — only show when no profession */}
+      {!profession && (
+        <div className="filters">
+          <div className="search-wrapper">
+            <input
+              type="text"
+              placeholder="🔍 Search college name..."
+              value={searchInput}
+              onChange={e => setSearchInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSearch()}
+              className="search-input"
+            />
+            <button onClick={handleSearch} className="search-btn">
+              Search
+            </button>
+          </div>
+          <select
+            value={selectedState}
+            onChange={e => handleFilter(setSelectedState, e.target.value)}
+            className="filter-select">
+            {states.map(s => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+          <select
+            value={selectedStream}
+            onChange={e => handleFilter(setSelectedStream, e.target.value)}
+            className="filter-select">
+            {streams.map(s => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* RESULTS COUNT */}
       <div className="results-count">
-        {loading ? 'Loading...' : `Showing ${colleges.length} of ${total.toLocaleString()} colleges — Page ${page} of ${totalPages}`}
+        {loading
+          ? 'Loading...'
+          : `Showing ${colleges.length} of ${total.toLocaleString()} colleges — Page ${page} of ${totalPages}`
+        }
       </div>
 
       {/* ERROR */}
       {error && (
-        <div className="error-box">
-          ⚠️ {error}
-        </div>
+        <div className="error-box">⚠️ {error}</div>
       )}
 
       {/* LOADING */}
@@ -172,19 +212,12 @@ function CollegeFinder() {
             className="page-btn">
             ← Prev
           </button>
-
-          {/* Page numbers */}
           {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
             let pageNum;
-            if (totalPages <= 5) {
-              pageNum = i + 1;
-            } else if (page <= 3) {
-              pageNum = i + 1;
-            } else if (page >= totalPages - 2) {
-              pageNum = totalPages - 4 + i;
-            } else {
-              pageNum = page - 2 + i;
-            }
+            if (totalPages <= 5)       pageNum = i + 1;
+            else if (page <= 3)        pageNum = i + 1;
+            else if (page >= totalPages - 2) pageNum = totalPages - 4 + i;
+            else                       pageNum = page - 2 + i;
             return (
               <button
                 key={pageNum}
@@ -194,7 +227,6 @@ function CollegeFinder() {
               </button>
             );
           })}
-
           <button
             onClick={() => setPage(p => p + 1)}
             disabled={page === totalPages}

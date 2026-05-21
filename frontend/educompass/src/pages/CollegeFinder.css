@@ -6,7 +6,7 @@
 
 .college-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
 .college-header h1 {
@@ -19,6 +19,39 @@
   margin-top: 8px;
 }
 
+/* PROFESSION BANNER */
+.profession-banner {
+  background: #0D4F5C;
+  color: white;
+  padding: 14px 25px;
+  border-radius: 12px;
+  max-width: 1000px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15px;
+}
+
+.profession-banner strong {
+  color: #E8A624;
+}
+
+.clear-btn {
+  background: #E8A624;
+  color: #0D4F5C;
+  border: none;
+  padding: 7px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+.clear-btn:hover { transform: scale(1.05); }
+
+/* FILTERS */
 .filters {
   display: flex;
   gap: 15px;
@@ -107,6 +140,7 @@
   to { transform: rotate(360deg); }
 }
 
+/* COLLEGE GRID */
 .colleges-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -214,6 +248,7 @@
   color: #666;
 }
 
+/* PAGINATION */
 .pagination {
   display: flex;
   justify-content: center;
