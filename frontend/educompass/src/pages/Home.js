@@ -57,10 +57,10 @@ function Home() {
               <h2>8,129+</h2>
               <p>Colleges Listed</p>
             </div>
-            <div className="stat">
+            {/* <div className="stat">
               <h2>4,462+</h2>
               <p>Career Paths</p>
-            </div>
+            </div> */}
             <div className="stat">
               <h2>5,000+</h2>
               <p>Scholarships</p>
@@ -77,7 +77,7 @@ function Home() {
           <div className="feature-card">
             <div className="feature-icon">🎯</div>
             <h3>Aptitude Quiz</h3>
-            <p>20 questions to discover your
+            <p>18 questions to discover your
               strengths and ideal career path</p>
           </div>
 
@@ -111,9 +111,10 @@ function Home() {
 
           <div className="feature-card">
             <div className="feature-icon">🤖</div>
-            <h3>AI Advisor</h3>
-            <p>Chat with our AI for personalized
-              academic guidance anytime</p>
+            <h3>ML Career Predictor</h3>
+            <p>Answer 18 smart questions and
+              our trained ML model instantly
+              predicts your best career profession</p>
           </div>
 
           <div className="feature-card">
@@ -121,6 +122,15 @@ function Home() {
             <h3>College Predictor</h3>
             <p>Enter your MHT-CET percentile and instantly
               find Safe, Good and Reach colleges</p>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-icon">🗺️</div>
+            <h3>Career Pathways</h3>
+            <p>Explore step-by-step roadmaps
+              for Engineering, Medical and
+              Pharmacy — from 10th pass
+              to your dream career</p>
           </div>
 
         </div>
@@ -133,13 +143,13 @@ function Home() {
           <div className="step">
             <div className="step-number">1</div>
             <h3>Create Profile</h3>
-            <p>Enter your class, stream, marks and location</p>
+            <p>Register and Login</p>
           </div>
           <div className="step-arrow">→</div>
           <div className="step">
             <div className="step-number">2</div>
             <h3>Take Quiz</h3>
-            <p>Answer 20 aptitude questions</p>
+            <p>Answer 18 aptitude questions</p>
           </div>
           <div className="step-arrow">→</div>
           <div className="step">
@@ -151,7 +161,7 @@ function Home() {
           <div className="step">
             <div className="step-number">4</div>
             <h3>Find Colleges</h3>
-            <p>Discover colleges near you</p>
+            <p>Discover colleges according to your career profession</p>
           </div>
         </div>
       </div>
